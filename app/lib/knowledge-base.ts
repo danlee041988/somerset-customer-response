@@ -1,5 +1,5 @@
-import { promises as fs } from 'fs'
-import { join } from 'path'
+// Import knowledge base statically to work in serverless environments
+import { knowledgeBaseData } from './knowledge-base-data'
 
 interface KnowledgeEntry {
   id: string
@@ -9,28 +9,24 @@ interface KnowledgeEntry {
   version: number
 }
 
-export async function getKnowledgeBase(): Promise<Record<string, string>> {
+export function getKnowledgeBase(): Record<string, string> {
   try {
-    const knowledgeFile = join(process.cwd(), 'data', 'knowledge-base.json')
-    const data = await fs.readFile(knowledgeFile, 'utf8')
-    const knowledgeBase: KnowledgeEntry[] = JSON.parse(data)
-    
     // Convert to category-indexed format for easy retrieval
     const categorizedKnowledge: Record<string, string> = {}
     
-    knowledgeBase.forEach(entry => {
+    knowledgeBaseData.forEach(entry => {
       categorizedKnowledge[entry.category] = entry.content
     })
     
     return categorizedKnowledge
   } catch (error) {
-    console.log('Knowledge base not found, using default business context')
+    console.error('Error processing knowledge base:', error)
     return {}
   }
 }
 
-export async function getRelevantKnowledge(customerMessage: string): Promise<string> {
-  const knowledgeBase = await getKnowledgeBase()
+export function getRelevantKnowledge(customerMessage: string): string {
+  const knowledgeBase = getKnowledgeBase()
   
   if (Object.keys(knowledgeBase).length === 0) {
     return ''
@@ -92,8 +88,8 @@ export async function getRelevantKnowledge(customerMessage: string): Promise<str
   return relevantKnowledge
 }
 
-export async function getAllKnowledgeForPrompt(): Promise<string> {
-  const knowledgeBase = await getKnowledgeBase()
+export function getAllKnowledgeForPrompt(): string {
+  const knowledgeBase = getKnowledgeBase()
   
   if (Object.keys(knowledgeBase).length === 0) {
     return ''

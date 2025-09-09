@@ -4,12 +4,29 @@ import { getSomersetBusinessContext } from '@/app/lib/business-context'
 import { getScheduleData } from '@/app/lib/schedule-data'
 import { getAllKnowledgeForPrompt, getRelevantKnowledge } from '@/app/lib/knowledge-base'
 
+// Ensure we're using Node.js runtime for Anthropic SDK
+export const runtime = 'nodejs'
+
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
 })
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate API key first
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.error('ANTHROPIC_API_KEY is not set in environment variables')
+      return NextResponse.json(
+        { 
+          error: 'API configuration error',
+          content: 'I apologize, but I\'m having trouble generating a response right now. Please contact Somerset Window Cleaning directly at info@somersetwindowcleaning.co.uk or call our main number for immediate assistance.',
+          confidence: 0,
+          suggestions: ['Contact system administrator', 'Check API configuration']
+        },
+        { status: 500 }
+      )
+    }
+
     const { message, context, timestamp } = await request.json()
 
     if (!message) {
@@ -22,8 +39,8 @@ export async function POST(request: NextRequest) {
     // Get Somerset business context, scheduling, and adaptive knowledge
     const businessContext = getSomersetBusinessContext()
     const scheduleData = getScheduleData()
-    const comprehensiveKnowledge = await getAllKnowledgeForPrompt()
-    const relevantKnowledge = await getRelevantKnowledge(message)
+    const comprehensiveKnowledge = getAllKnowledgeForPrompt()
+    const relevantKnowledge = getRelevantKnowledge(message)
     
     // Build comprehensive prompt for Claude with all available knowledge
     const systemPrompt = `You are a customer service assistant for Somerset Window Cleaning, a professional window cleaning service in Somerset, UK.
@@ -93,13 +110,22 @@ TIMESTAMP: ${timestamp || new Date().toISOString()}`
 
   } catch (error) {
     console.error('Error generating AI response:', error)
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : 'Unknown',
+      apiKey: process.env.ANTHROPIC_API_KEY ? 'Present' : 'Missing'
+    })
     
     return NextResponse.json(
       { 
         error: 'Failed to generate response',
         content: 'I apologize, but I\'m having trouble generating a response right now. Please contact Somerset Window Cleaning directly at info@somersetwindowcleaning.co.uk or call our main number for immediate assistance.',
         confidence: 0,
-        suggestions: ['Check API configuration', 'Verify Anthropic API key', 'Try again in a few moments']
+        suggestions: ['Check API configuration', 'Verify Anthropic API key', 'Try again in a few moments'],
+        debug: process.env.NODE_ENV === 'development' ? {
+          errorMessage: error instanceof Error ? error.message : 'Unknown error'
+        } : undefined
       },
       { status: 500 }
     )
