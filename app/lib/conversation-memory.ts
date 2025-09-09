@@ -35,34 +35,9 @@ interface Conversation {
 export class ConversationMemory {
   private conversations: Map<string, Conversation> = new Map()
   
-  // Initialize with localStorage for client-side persistence (will upgrade to database later)
+  // Serverless-compatible constructor (no localStorage in server environment)
   constructor() {
-    if (typeof window !== 'undefined') {
-      this.loadFromStorage()
-    }
-  }
-
-  private loadFromStorage(): void {
-    try {
-      const stored = localStorage.getItem('somerset_conversations')
-      if (stored) {
-        const data = JSON.parse(stored)
-        for (const [id, conversation] of Object.entries(data)) {
-          this.conversations.set(id, conversation as Conversation)
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load conversation memory:', error)
-    }
-  }
-
-  private saveToStorage(): void {
-    try {
-      const data = Object.fromEntries(this.conversations.entries())
-      localStorage.setItem('somerset_conversations', JSON.stringify(data))
-    } catch (error) {
-      console.error('Failed to save conversation memory:', error)
-    }
+    // Skip localStorage in serverless environment
   }
 
   // Intelligent message type detection
@@ -163,7 +138,7 @@ export class ConversationMemory {
     // Update tags based on content
     this.updateTags(conversation, content, context)
 
-    this.saveToStorage()
+    // Skip saving in serverless environment
     return conversationId
   }
 
@@ -368,7 +343,7 @@ export class ConversationMemory {
       }
     }
     
-    this.saveToStorage()
+    // Skip saving in serverless environment
     return removedCount
   }
 }
