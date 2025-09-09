@@ -43,13 +43,23 @@ export default function Home() {
   return (
     <div className="space-y-8">
       <div className="bg-white rounded-lg shadow-sm border p-6">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-900">
-          Customer Message Processor
-        </h2>
-        <p className="text-gray-600 mb-6">
-          Paste a customer email or message below to generate a professional response 
-          tailored to Somerset Window Cleaning's services and availability.
-        </p>
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-900">
+              Customer Message Processor
+            </h2>
+            <p className="text-gray-600 mt-2">
+              Paste a customer email or message below to generate a professional response 
+              tailored to Somerset Window Cleaning's services and availability.
+            </p>
+          </div>
+          <a
+            href="/admin"
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+          >
+            📚 Manage Knowledge Base
+          </a>
+        </div>
         
         <MessageInput onSubmit={handleMessageSubmit} isLoading={isLoading} />
       </div>

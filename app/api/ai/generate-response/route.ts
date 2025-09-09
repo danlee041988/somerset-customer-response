@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { getSomersetBusinessContext } from '@/app/lib/business-context'
 import { getScheduleData } from '@/app/lib/schedule-data'
+import { getAllKnowledgeForPrompt, getRelevantKnowledge } from '@/app/lib/knowledge-base'
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
@@ -18,18 +19,25 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get Somerset business context and current scheduling
+    // Get Somerset business context, scheduling, and adaptive knowledge
     const businessContext = getSomersetBusinessContext()
     const scheduleData = getScheduleData()
+    const comprehensiveKnowledge = await getAllKnowledgeForPrompt()
+    const relevantKnowledge = await getRelevantKnowledge(message)
     
-    // Build comprehensive prompt for Claude
+    // Build comprehensive prompt for Claude with all available knowledge
     const systemPrompt = `You are a customer service assistant for Somerset Window Cleaning, a professional window cleaning service in Somerset, UK.
 
-BUSINESS CONTEXT:
+CORE BUSINESS CONTEXT:
 ${JSON.stringify(businessContext, null, 2)}
 
 CURRENT SCHEDULE & AVAILABILITY:
 ${JSON.stringify(scheduleData, null, 2)}
+
+${comprehensiveKnowledge}
+
+RELEVANT KNOWLEDGE FOR THIS INQUIRY:
+${relevantKnowledge}
 
 INSTRUCTIONS:
 1. Generate a professional, friendly response to the customer's inquiry
