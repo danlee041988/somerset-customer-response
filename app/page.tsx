@@ -50,7 +50,7 @@ export default function Home() {
             </h2>
             <p className="text-gray-600 mt-2">
               Paste a customer email or message below to generate a professional response 
-              tailored to Somerset Window Cleaning's services and availability.
+              tailored to Somerset Window Cleaning&apos;s services and availability.
             </p>
           </div>
           <a
