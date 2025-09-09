@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="min-h-screen bg-gray-50">
-          <header className="bg-somerset-blue text-white p-4">
+          <header className="bg-somerset-black text-somerset-white p-4">
             <div className="max-w-7xl mx-auto">
               <h1 className="text-xl font-bold">Somerset Window Cleaning</h1>
               <p className="text-sm opacity-90">Customer Response System</p>

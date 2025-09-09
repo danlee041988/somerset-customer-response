@@ -1,6 +1,6 @@
 export interface CustomerMessage {
   content: string
-  customerEmail?: string
+  context?: string
   timestamp?: string
 }
 

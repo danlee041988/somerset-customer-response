@@ -3,43 +3,28 @@
 import { useState } from 'react'
 
 interface MessageInputProps {
-  onSubmit: (message: string, customerEmail?: string) => void
+  onSubmit: (message: string, context?: string) => void
   isLoading: boolean
 }
 
 export default function MessageInput({ onSubmit, isLoading }: MessageInputProps) {
   const [message, setMessage] = useState('')
-  const [customerEmail, setCustomerEmail] = useState('')
+  const [context, setContext] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (message.trim()) {
-      onSubmit(message.trim(), customerEmail.trim() || undefined)
+      onSubmit(message.trim(), context.trim() || undefined)
     }
   }
 
   const handleClear = () => {
     setMessage('')
-    setCustomerEmail('')
+    setContext('')
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="customer-email" className="block text-sm font-medium text-gray-700 mb-2">
-          Customer Email (Optional)
-        </label>
-        <input
-          id="customer-email"
-          type="email"
-          value={customerEmail}
-          onChange={(e) => setCustomerEmail(e.target.value)}
-          placeholder="customer@email.com"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-somerset-blue focus:border-somerset-blue"
-          disabled={isLoading}
-        />
-      </div>
-
       <div>
         <label htmlFor="customer-message" className="block text-sm font-medium text-gray-700 mb-2">
           Customer Message *
@@ -50,17 +35,35 @@ export default function MessageInput({ onSubmit, isLoading }: MessageInputProps)
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Paste the customer's email or message here..."
           rows={8}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-somerset-blue focus:border-somerset-blue resize-vertical"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-somerset-red focus:border-somerset-red resize-vertical"
           required
           disabled={isLoading}
         />
+      </div>
+
+      <div>
+        <label htmlFor="additional-context" className="block text-sm font-medium text-gray-700 mb-2">
+          Additional Context (Optional)
+        </label>
+        <textarea
+          id="additional-context"
+          value={context}
+          onChange={(e) => setContext(e.target.value)}
+          placeholder="Add internal notes, scheduling info, etc. (e.g., 'Book Thursday 18th', 'Customer prefers mornings', 'Large property - quote accordingly')"
+          rows={3}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-somerset-red focus:border-somerset-red resize-vertical"
+          disabled={isLoading}
+        />
+        <p className="mt-1 text-xs text-gray-500">
+          Internal notes to help generate a better response - not visible to customer
+        </p>
       </div>
 
       <div className="flex gap-3">
         <button
           type="submit"
           disabled={!message.trim() || isLoading}
-          className="flex-1 bg-somerset-blue text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+          className="flex-1 bg-somerset-red text-white py-2 px-4 rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
         >
           {isLoading ? (
             <span className="flex items-center justify-center">

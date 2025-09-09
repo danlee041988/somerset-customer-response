@@ -10,7 +10,7 @@ const anthropic = new Anthropic({
 
 export async function POST(request: NextRequest) {
   try {
-    const { message, customerEmail, timestamp } = await request.json()
+    const { message, context, timestamp } = await request.json()
 
     if (!message) {
       return NextResponse.json(
@@ -48,7 +48,7 @@ INSTRUCTIONS:
 6. If you need more information to provide a complete answer, ask relevant follow-up questions
 7. End responses with appropriate next steps or contact information
 
-CUSTOMER EMAIL: ${customerEmail || 'Not provided'}
+ADDITIONAL CONTEXT FROM TEAM: ${context || 'None provided'}
 TIMESTAMP: ${timestamp || new Date().toISOString()}`
 
     const userPrompt = `Please generate a response to this customer message:

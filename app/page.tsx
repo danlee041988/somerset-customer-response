@@ -10,9 +10,9 @@ export default function Home() {
   const [currentResponse, setCurrentResponse] = useState<AIResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleMessageSubmit = async (message: string, customerEmail?: string) => {
+  const handleMessageSubmit = async (message: string, context?: string) => {
     setIsLoading(true)
-    setCurrentMessage({ content: message, customerEmail })
+    setCurrentMessage({ content: message, context })
     setCurrentResponse(null)
 
     try {
@@ -21,7 +21,7 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           message, 
-          customerEmail,
+          context,
           timestamp: new Date().toISOString()
         }),
       })
@@ -55,7 +55,7 @@ export default function Home() {
           </div>
           <a
             href="/admin"
-            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+            className="inline-flex items-center px-3 py-2 border border-somerset-red rounded-md text-sm font-medium text-somerset-red bg-white hover:bg-red-50 transition-colors"
           >
             📚 Manage Knowledge Base
           </a>
@@ -75,10 +75,11 @@ export default function Home() {
                 <p className="whitespace-pre-wrap text-gray-800">
                   {currentMessage.content}
                 </p>
-                {currentMessage.customerEmail && (
-                  <p className="text-sm text-gray-500 mt-2">
-                    From: {currentMessage.customerEmail}
-                  </p>
+                {currentMessage.context && (
+                  <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
+                    <p className="text-sm text-blue-700 font-medium">Additional Context:</p>
+                    <p className="text-sm text-blue-800 mt-1">{currentMessage.context}</p>
+                  </div>
                 )}
               </div>
             </div>

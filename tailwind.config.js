@@ -8,9 +8,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'somerset-blue': '#1e40af',
-        'somerset-red': '#dc2626',
-        'somerset-green': '#16a34a',
+        'somerset-black': '#1f2937',
+        'somerset-red': '#dc2626', 
+        'somerset-white': '#ffffff',
       },
     },
   },

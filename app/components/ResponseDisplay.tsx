@@ -179,7 +179,7 @@ export default function ResponseDisplay({ response, isLoading }: ResponseDisplay
             
             <button
               onClick={handleFeedbackSubmit}
-              className="px-4 py-2 bg-somerset-blue text-white text-sm rounded hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-somerset-red text-white text-sm rounded hover:bg-red-700 transition-colors"
             >
               Submit Feedback
             </button>
