@@ -1,3 +1,20 @@
 {
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "functions": {
+    "app/api/ai/generate-response/route.ts": {
+      "maxDuration": 30,
+      "memory": 512
+    },
+    "app/api/admin/update-knowledge/route.ts": {
+      "maxDuration": 15,
+      "memory": 256
+    },
+    "app/api/feedback/route.ts": {
+      "maxDuration": 10,
+      "memory": 256
+    }
+  },
+  "env": {
+    "NODE_ENV": "production"
+  }
 }

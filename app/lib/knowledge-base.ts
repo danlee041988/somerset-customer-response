@@ -25,11 +25,29 @@ export function getKnowledgeBase(): Record<string, string> {
   }
 }
 
+// Fallback knowledge for serverless environments
+const FALLBACK_KNOWLEDGE: Record<string, string> = {
+  services: 'Window cleaning (4-weekly, 8-weekly), gutter clearing, gutter & fascia cleaning, pressure washing, conservatory cleaning, solar panel cleaning',
+  pricing: 'Pricing based on property size and service frequency. Contact for quote.',
+  policies: 'All work guaranteed for 48 hours. Weather dependent service.',
+  areas: 'Serving Bath, Bristol, Keynsham, Saltford, Paulton, Midsomer Norton, Radstock and surrounding Somerset areas',
+  scheduling: 'We work Monday to Friday, 8am-5pm, with Saturday availability for larger jobs. Weather dependent.',
+  general: 'Professional window cleaning service covering Somerset areas. Contact info@somersetwindowcleaning.co.uk for quotes.'
+}
+
 export function getRelevantKnowledge(customerMessage: string): string {
-  const knowledgeBase = getKnowledgeBase()
+  let knowledgeBase
   
-  if (Object.keys(knowledgeBase).length === 0) {
-    return ''
+  try {
+    knowledgeBase = getKnowledgeBase()
+    
+    if (Object.keys(knowledgeBase).length === 0) {
+      console.warn('Knowledge base empty, using fallback knowledge')
+      knowledgeBase = FALLBACK_KNOWLEDGE
+    }
+  } catch (error) {
+    console.error('Error loading knowledge base, using fallback:', error)
+    knowledgeBase = FALLBACK_KNOWLEDGE
   }
   
   let relevantKnowledge = ''
