@@ -42,20 +42,20 @@ export default function Home() {
 
   return (
     <div className="space-y-8">
-      <div className="bg-white rounded-lg shadow-sm border p-6">
-        <div className="flex justify-between items-start mb-4">
+      <div className="bg-white rounded-lg shadow-sm border p-8">
+        <div className="flex justify-between items-start mb-6">
           <div>
-            <h2 className="text-2xl font-semibold text-gray-900">
+            <h2 className="text-3xl font-semibold text-gray-900">
               Customer Message Processor
             </h2>
-            <p className="text-gray-600 mt-2">
+            <p className="text-gray-600 mt-3 text-lg">
               Paste a customer email or message below to generate a professional response 
               tailored to Somerset Window Cleaning&apos;s services and availability.
             </p>
           </div>
           <a
             href="/admin"
-            className="inline-flex items-center px-3 py-2 border border-somerset-red rounded-md text-sm font-medium text-somerset-red bg-white hover:bg-red-50 transition-colors"
+            className="inline-flex items-center px-4 py-2.5 border border-somerset-red rounded-md text-sm font-medium text-somerset-red bg-white hover:bg-red-50 transition-colors"
           >
             📚 Manage Knowledge Base
           </a>
@@ -65,13 +65,13 @@ export default function Home() {
       </div>
 
       {(currentMessage || currentResponse) && (
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-8">
           {currentMessage && (
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h3 className="text-lg font-semibold mb-4 text-gray-900">
+            <div className="bg-white rounded-lg shadow-sm border p-8">
+              <h3 className="text-xl font-semibold mb-4 text-gray-900">
                 Customer Message
               </h3>
-              <div className="bg-gray-50 rounded p-4">
+              <div className="bg-gray-50 rounded p-5">
                 <p className="whitespace-pre-wrap text-gray-800">
                   {currentMessage.content}
                 </p>
