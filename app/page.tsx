@@ -30,10 +30,24 @@ export default function Home() {
       setCurrentResponse(data)
     } catch (error) {
       console.error('Error generating response:', error)
+      
+      let errorContent = 'Sorry, there was an error generating the response. Please try again.'
+      let suggestions = ['Check your internet connection', 'Try again in a moment']
+      
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        errorContent = 'Unable to connect to the AI service. Please check your internet connection and try again.'
+        suggestions = ['Check your internet connection', 'Try again in a few moments', 'Contact support if the problem persists']
+      } else if (error instanceof Error && error.message.includes('timeout')) {
+        errorContent = 'The request timed out. This usually happens with longer messages. Please try again.'
+        suggestions = ['Try again with a shorter message', 'Check your internet connection']
+      }
+      
       setCurrentResponse({
-        content: 'Sorry, there was an error generating the response. Please try again.',
+        content: errorContent,
         confidence: 0,
-        suggestions: ['Check your internet connection', 'Verify API configuration']
+        suggestions,
+        error: true,
+        timestamp: new Date().toISOString()
       })
     } finally {
       setIsLoading(false)
@@ -41,23 +55,24 @@ export default function Home() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="bg-white rounded-lg shadow-sm border p-8">
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <h2 className="text-3xl font-semibold text-gray-900">
+    <div className="space-y-6 lg:space-y-8">
+      <div className="bg-white rounded-lg shadow-sm border p-6 lg:p-8">
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 mb-6">
+          <div className="flex-1">
+            <h2 className="text-2xl lg:text-3xl font-semibold text-gray-900">
               Customer Message Processor
             </h2>
-            <p className="text-gray-600 mt-3 text-lg">
+            <p className="text-gray-600 mt-2 lg:mt-3 text-base lg:text-lg">
               Paste a customer email or message below to generate a professional response 
               tailored to Somerset Window Cleaning&apos;s services and availability.
             </p>
           </div>
           <a
             href="/admin"
-            className="inline-flex items-center px-4 py-2.5 border border-somerset-red rounded-md text-sm font-medium text-somerset-red bg-white hover:bg-red-50 transition-colors"
+            className="inline-flex items-center px-3 lg:px-4 py-2 lg:py-2.5 border border-somerset-red rounded-md text-sm font-medium text-somerset-red bg-white hover:bg-red-50 transition-colors btn-focus self-start"
           >
-            📚 Manage Knowledge Base
+            <span aria-hidden="true">📚</span>
+            <span className="ml-2">Manage Knowledge Base</span>
           </a>
         </div>
         
@@ -65,13 +80,13 @@ export default function Home() {
       </div>
 
       {(currentMessage || currentResponse) && (
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
           {currentMessage && (
-            <div className="bg-white rounded-lg shadow-sm border p-8">
-              <h3 className="text-xl font-semibold mb-4 text-gray-900">
+            <div className="bg-white rounded-lg shadow-sm border p-6 lg:p-8">
+              <h3 className="text-lg lg:text-xl font-semibold mb-4 text-gray-900">
                 Customer Message
               </h3>
-              <div className="bg-gray-50 rounded p-5">
+              <div className="bg-gray-50 rounded p-4 lg:p-5">
                 <p className="whitespace-pre-wrap text-gray-800">
                   {currentMessage.content}
                 </p>

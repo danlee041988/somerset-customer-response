@@ -11,6 +11,7 @@ module.exports = {
         'somerset-black': '#1f2937',
         'somerset-red': '#dc2626', 
         'somerset-white': '#ffffff',
+        'somerset-blue': '#3b82f6',
       },
     },
   },

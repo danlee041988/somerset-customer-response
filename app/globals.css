@@ -6,4 +6,30 @@
   body {
     @apply bg-gray-50 text-gray-900;
   }
+  
+  /* Focus styles for accessibility */
+  *:focus {
+    @apply outline-none;
+  }
+  
+  *:focus-visible {
+    @apply ring-2 ring-somerset-red ring-offset-2;
+  }
+  
+  /* Skip link styles */
+  .sr-only:focus {
+    @apply not-sr-only absolute top-4 left-4 z-50;
+  }
+}
+
+@layer components {
+  /* Button focus styles */
+  .btn-focus {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-somerset-red focus-visible:ring-offset-2;
+  }
+  
+  /* Input focus styles */
+  .input-focus {
+    @apply focus:border-somerset-red focus:ring-1 focus:ring-somerset-red;
+  }
 }

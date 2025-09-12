@@ -28,9 +28,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { 
           error: 'API configuration error',
+          errorType: 'CONFIGURATION_ERROR',
           content: 'I apologize, but I\'m having trouble generating a response right now. Please contact Somerset Window Cleaning directly at info@somersetwindowcleaning.co.uk or call our main number for immediate assistance.',
           confidence: 0,
-          suggestions: ['Contact system administrator', 'Check API configuration']
+          suggestions: ['Contact system administrator', 'Check API configuration'],
+          timestamp: new Date().toISOString(),
+          retryable: false
         },
         { status: 500 }
       )
@@ -40,7 +43,14 @@ export async function POST(request: NextRequest) {
 
     if (!message) {
       return NextResponse.json(
-        { error: 'Message is required' },
+        { 
+          error: 'Message is required',
+          errorType: 'VALIDATION_ERROR',
+          content: 'Please enter a customer message to generate a response.',
+          suggestions: ['Enter a customer message in the text area'],
+          timestamp: new Date().toISOString(),
+          retryable: true
+        },
         { status: 400 }
       )
     }
